@@ -5,6 +5,14 @@
  */
 package interviewee;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Sambhav Kanishka
@@ -14,10 +22,14 @@ public class Screen extends javax.swing.JFrame {
     /**
      * Creates new form Screen
      */
-    public Screen() {
+    ServerSocket ss;
+    Socket s; DataInputStream dis;String str;
+    
+    public Screen() throws IOException {
         initComponents();
+        //func();
     }
-
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -122,6 +134,11 @@ public class Screen extends javax.swing.JFrame {
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
+        jTextArea1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextArea1KeyTyped(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTextArea1);
 
         Question.setEditable(false);
@@ -252,6 +269,30 @@ public class Screen extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_font_styleActionPerformed
 
+    private void jTextArea1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyTyped
+        // TODO add your handling code here:
+       
+    }//GEN-LAST:event_jTextArea1KeyTyped
+    public void func() throws IOException{
+       try{//ss=new ServerSocket(6669);
+       s=new Socket("172.29.43.151",6668);
+       System.out.println("inside func");
+       dis=new DataInputStream(s.getInputStream());
+       //while(true){
+       System.out.println("inf"); 
+       str=(String)dis.readUTF();  
+       System.out.println("message= "+str); 
+       jTextArea1.setText(str);
+       str=(String)dis.readUTF();  
+       System.out.println("message= "+str); 
+       jTextArea1.setText(str);
+       str=(String)dis.readUTF();  
+       System.out.println("message= "+str); 
+       jTextArea1.setText(str);
+       //}
+    //ss.close();  
+}catch(Exception e){System.out.println(e);} 
+    }
     /**
      * @param args the command line arguments
      */
@@ -282,7 +323,11 @@ public class Screen extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Screen().setVisible(true);
+                try {
+                    new Screen().setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(Screen.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

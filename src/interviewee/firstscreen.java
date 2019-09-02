@@ -5,11 +5,14 @@
  */
 package interviewee;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -20,6 +23,9 @@ public class firstscreen extends javax.swing.JFrame {
     /**
      * Creates new form firstscreen
      */
+    ServerSocket ss;
+    Socket s;DataInputStream dis;
+    
     public firstscreen() {
         initComponents();
     }
@@ -134,9 +140,11 @@ public class firstscreen extends javax.swing.JFrame {
 
     private void StartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartActionPerformed
         // TODO add your handling code here:
-       try{      
-        Socket s=new Socket("172.29.45.224",6666);  
-        DataOutputStream dout=new DataOutputStream(s.getOutputStream());  
+       try{
+        s=new Socket("172.29.43.151",6669);  //172.29.45.224
+        System.out.println(1);
+        DataOutputStream dout=new DataOutputStream(s.getOutputStream());
+        
         dout.writeUTF(College.getText());  
         dout.flush();  
         dout.writeUTF(Regno.getText());  
@@ -145,9 +153,32 @@ public class firstscreen extends javax.swing.JFrame {
         dout.flush();  
         dout.writeUTF(Branch.getText());  
         dout.flush();       
-        dout.close();  
-        s.close();  
-}catch(IOException e){System.out.println(e);} 
+        DataInputStream din=new DataInputStream(s.getInputStream());
+        String str=din.readUTF();
+        System.out.println(str);
+        if(str.compareTo("1")==0){
+            Screen scr=new Screen();
+            this.dispose();
+            scr.setVisible(true);
+            dout.close();
+        din.close();
+        s.close();
+        Thread.sleep(1000);
+        System.out.println("hi bro");
+        scr.func();
+                }
+        else{
+            JOptionPane.showMessageDialog(null, "Unsuccessful Connection", "InterCode", JOptionPane.INFORMATION_MESSAGE);
+        }
+//        dout.close();
+//        din.close();
+//        s.close();
+//        this.dispose();
+}catch(IOException e){
+            System.out.println(0);           
+    System.out.println(e);} catch (InterruptedException ex) {  
+            Logger.getLogger(firstscreen.class.getName()).log(Level.SEVERE, null, ex);
+        }  
     }//GEN-LAST:event_StartActionPerformed
 
     /**
