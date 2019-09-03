@@ -151,6 +151,8 @@
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="select_language" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
+                      <Component id="start_editing" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="font_style" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="font_size" min="-2" max="-2" attributes="0"/>
@@ -193,6 +195,7 @@
                   <Component id="font_size" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="send" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="font_style" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="start_editing" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="tabs" min="-2" pref="172" max="-2" attributes="0"/>
@@ -370,5 +373,10 @@
         </Container>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JButton" name="start_editing">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Start"/>
+      </Properties>
+    </Component>
   </SubComponents>
 </Form>

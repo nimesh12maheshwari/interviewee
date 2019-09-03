@@ -24,10 +24,13 @@ public class Screen extends javax.swing.JFrame {
      */
     ServerSocket ss;
     Socket s; DataInputStream dis;String str;
+    Thread mt = new Thread();
     
     public Screen() throws IOException {
         initComponents();
-        //func();
+        s=new Socket("localhost",6668);
+        Mthread t1 = new Mthread();
+        t1.start();
     }
    
     /**
@@ -72,6 +75,7 @@ public class Screen extends javax.swing.JFrame {
         tabs = new javax.swing.JTabbedPane();
         input_tab = new javax.swing.JPanel();
         output_tab = new javax.swing.JTabbedPane();
+        start_editing = new javax.swing.JButton();
         jMenuBar3 = new javax.swing.JMenuBar();
         jMenu5 = new javax.swing.JMenu();
         jMenu6 = new javax.swing.JMenu();
@@ -195,6 +199,8 @@ public class Screen extends javax.swing.JFrame {
         tabs.addTab("Input", input_tab);
         tabs.addTab("Output", output_tab);
 
+        start_editing.setText("Start");
+
         jMenu5.setText("File");
         jMenuBar3.add(jMenu5);
 
@@ -216,6 +222,8 @@ public class Screen extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(select_language, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(start_editing)
+                        .addGap(18, 18, 18)
                         .addComponent(font_style, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(font_size, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -249,7 +257,8 @@ public class Screen extends javax.swing.JFrame {
                     .addComponent(select_language, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(font_size, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(send)
-                    .addComponent(font_style, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(font_style, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(start_editing))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tabs, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -275,21 +284,22 @@ public class Screen extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextArea1KeyTyped
     public void func() throws IOException{
        try{//ss=new ServerSocket(6669);
-       s=new Socket("172.29.43.151",6668);
+     //  s=new Socket("172.29.43.151",6668);
+             // s=new Socket("localhost",6668);
        System.out.println("inside func");
        dis=new DataInputStream(s.getInputStream());
-       //while(true){
+       while(true){
        System.out.println("inf"); 
        str=(String)dis.readUTF();  
        System.out.println("message= "+str); 
        jTextArea1.setText(str);
-       str=(String)dis.readUTF();  
-       System.out.println("message= "+str); 
-       jTextArea1.setText(str);
-       str=(String)dis.readUTF();  
-       System.out.println("message= "+str); 
-       jTextArea1.setText(str);
-       //}
+//       str=(String)dis.readUTF();  
+//       System.out.println("message= "+str); 
+//       jTextArea1.setText(str);
+//       str=(String)dis.readUTF();  
+//       System.out.println("message= "+str); 
+//       jTextArea1.setText(str);
+       }
     //ss.close();  
 }catch(Exception e){System.out.println(e);} 
     }
@@ -368,6 +378,18 @@ public class Screen extends javax.swing.JFrame {
     private javax.swing.JButton run;
     private javax.swing.JComboBox<String> select_language;
     private javax.swing.JButton send;
+    private javax.swing.JButton start_editing;
     private javax.swing.JTabbedPane tabs;
     // End of variables declaration//GEN-END:variables
+
+    private class Mthread extends Thread{
+    @Override
+    public void run(){
+        try {
+            func();
+        } catch (IOException ex) {
+            Logger.getLogger(Screen.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    }
 }
