@@ -5,11 +5,13 @@
  */
 package interviewee;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -145,8 +147,24 @@ public class firstscreen extends javax.swing.JFrame {
         dout.flush();  
         dout.writeUTF(Branch.getText());  
         dout.flush();       
-        dout.close();  
-        s.close();  
+        
+        DataInputStream din=new DataInputStream(s.getInputStream());
+        String str=din.readUTF();
+        System.out.println(str);
+        if(str.compareTo("1")==0){
+        this.dispose();
+        new Screen().setVisible(true);
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Unsuccesful Connection", "InfoBox: " + "InterCode", JOptionPane.INFORMATION_MESSAGE);
+        }
+        Screen obj=new Screen();
+        obj.setVisible(true);
+        this.dispose();
+        dout.close();
+        din.close();
+        s.close(); 
+        
 }catch(IOException e){System.out.println(e);} 
     }//GEN-LAST:event_StartActionPerformed
 

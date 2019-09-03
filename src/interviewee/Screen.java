@@ -44,7 +44,7 @@ public class Screen extends javax.swing.JFrame {
         jDialog1 = new javax.swing.JDialog();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        code_editor = new javax.swing.JTextArea();
         Question = new javax.swing.JTextField();
         StudentName = new javax.swing.JTextField();
         Message = new javax.swing.JTextField();
@@ -120,9 +120,9 @@ public class Screen extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        code_editor.setColumns(20);
+        code_editor.setRows(5);
+        jScrollPane1.setViewportView(code_editor);
 
         Question.setEditable(false);
         Question.setText("Question");
@@ -297,6 +297,7 @@ public class Screen extends javax.swing.JFrame {
     private javax.swing.ButtonGroup buttonGroup4;
     private javax.swing.ButtonGroup buttonGroup5;
     private javax.swing.ButtonGroup buttonGroup6;
+    private javax.swing.JTextArea code_editor;
     private javax.swing.JButton compile;
     private javax.swing.JComboBox<String> font_size;
     private javax.swing.JComboBox<String> font_style;
@@ -316,7 +317,6 @@ public class Screen extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextPane jTextPane1;
     private javax.swing.JTabbedPane output_tab;
