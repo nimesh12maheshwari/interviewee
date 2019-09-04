@@ -141,8 +141,8 @@ public class firstscreen extends javax.swing.JFrame {
     private void StartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartActionPerformed
         // TODO add your handling code here:
        try{
-        //s=new Socket("172.29.43.151",6669);  //172.29.45.224
-                s=new Socket("localhost",6669);  //172.29.45.224
+        s=new Socket("localhost",6669);  //172.29.44.250
+        //        s=new Socket("localhost",6669);  //172.29.45.224
         System.out.println(1);
         DataOutputStream dout=new DataOutputStream(s.getOutputStream());
         
