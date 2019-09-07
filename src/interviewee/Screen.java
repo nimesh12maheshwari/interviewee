@@ -5,6 +5,14 @@
  */
 package interviewee;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Sambhav Kanishka
@@ -14,10 +22,18 @@ public class Screen extends javax.swing.JFrame {
     /**
      * Creates new form Screen
      */
-    public Screen() {
+    ServerSocket ss;
+    Socket s; DataInputStream dis;String str;DataOutputStream dout;
+    Thread mt = new Thread();
+    
+    public Screen() throws IOException {
         initComponents();
+        s=new Socket("localhost",6668); //172.29.44.250
+        Mthread t1 = new Mthread();
+        t1.start();
+        dout=new DataOutputStream(s.getOutputStream());
     }
-
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -44,7 +60,7 @@ public class Screen extends javax.swing.JFrame {
         jDialog1 = new javax.swing.JDialog();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        code_editor = new javax.swing.JTextArea();
         Question = new javax.swing.JTextField();
         StudentName = new javax.swing.JTextField();
         Message = new javax.swing.JTextField();
@@ -57,9 +73,12 @@ public class Screen extends javax.swing.JFrame {
         font_size = new javax.swing.JComboBox<>();
         font_style = new javax.swing.JComboBox<>();
         send = new javax.swing.JButton();
-        tabs = new javax.swing.JTabbedPane();
-        input_tab = new javax.swing.JPanel();
-        output_tab = new javax.swing.JTabbedPane();
+        tabbed_pane = new javax.swing.JTabbedPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        input_text_tab = new javax.swing.JTextArea();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        output_text_tab = new javax.swing.JTextArea();
+        start_editing = new javax.swing.JButton();
         jMenuBar3 = new javax.swing.JMenuBar();
         jMenu5 = new javax.swing.JMenu();
         jMenu6 = new javax.swing.JMenu();
@@ -120,9 +139,17 @@ public class Screen extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        code_editor.setColumns(20);
+        code_editor.setRows(5);
+        code_editor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                code_editorKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                code_editorKeyTyped(evt);
+            }
+        });
+        jScrollPane1.setViewportView(code_editor);
 
         Question.setEditable(false);
         Question.setText("Question");
@@ -164,19 +191,20 @@ public class Screen extends javax.swing.JFrame {
 
         send.setText("Send");
 
-        javax.swing.GroupLayout input_tabLayout = new javax.swing.GroupLayout(input_tab);
-        input_tab.setLayout(input_tabLayout);
-        input_tabLayout.setHorizontalGroup(
-            input_tabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 925, Short.MAX_VALUE)
-        );
-        input_tabLayout.setVerticalGroup(
-            input_tabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 142, Short.MAX_VALUE)
-        );
+        input_text_tab.setColumns(20);
+        input_text_tab.setRows(5);
+        jScrollPane2.setViewportView(input_text_tab);
 
-        tabs.addTab("Input", input_tab);
-        tabs.addTab("Output", output_tab);
+        tabbed_pane.addTab("Input", jScrollPane2);
+
+        output_text_tab.setEditable(false);
+        output_text_tab.setColumns(20);
+        output_text_tab.setRows(5);
+        jScrollPane4.setViewportView(output_text_tab);
+
+        tabbed_pane.addTab("Output", jScrollPane4);
+
+        start_editing.setText("Start");
 
         jMenu5.setText("File");
         jMenuBar3.add(jMenu5);
@@ -199,6 +227,8 @@ public class Screen extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(select_language, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(start_editing)
+                        .addGap(18, 18, 18)
                         .addComponent(font_style, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(font_size, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -210,7 +240,7 @@ public class Screen extends javax.swing.JFrame {
                     .addComponent(send, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(StudentName, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)))
-            .addComponent(tabs)
+            .addComponent(tabbed_pane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -232,9 +262,10 @@ public class Screen extends javax.swing.JFrame {
                     .addComponent(select_language, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(font_size, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(send)
-                    .addComponent(font_style, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(font_style, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(start_editing))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tabs, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(tabbed_pane, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -252,6 +283,43 @@ public class Screen extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_font_styleActionPerformed
 
+    private void code_editorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_code_editorKeyTyped
+        // TODO add your handling code here:
+       
+    }//GEN-LAST:event_code_editorKeyTyped
+
+    private void code_editorKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_code_editorKeyPressed
+        // TODO add your handling code here:
+        //System.out.println("inside editor method");
+        try{    
+//System.out.println("here");
+dout.writeUTF(code_editor.getText());
+//System.out.println(code_editor.getText());
+dout.flush();    
+}
+        catch(Exception e){System.out.println(e + "exception occured");}
+    }//GEN-LAST:event_code_editorKeyPressed
+    public void func() throws IOException{
+       try{//ss=new ServerSocket(6669);
+     //  s=new Socket("172.29.43.151",6668);
+             // s=new Socket("localhost",6668);
+       //System.out.println("inside func");
+       dis=new DataInputStream(s.getInputStream());
+       while(true){
+       //System.out.println("inf"); 
+       str=(String)dis.readUTF();  
+       //System.out.println("message= "+str); 
+       code_editor.setText(str);
+//       str=(String)dis.readUTF();  
+//       System.out.println("message= "+str); 
+//       jTextArea1.setText(str);
+//       str=(String)dis.readUTF();  
+//       System.out.println("message= "+str); 
+//       jTextArea1.setText(str);
+       }
+    //ss.close();  
+}catch(Exception e){System.out.println(e);} 
+    }
     /**
      * @param args the command line arguments
      */
@@ -282,7 +350,11 @@ public class Screen extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Screen().setVisible(true);
+                try {
+                    new Screen().setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(Screen.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -297,10 +369,11 @@ public class Screen extends javax.swing.JFrame {
     private javax.swing.ButtonGroup buttonGroup4;
     private javax.swing.ButtonGroup buttonGroup5;
     private javax.swing.ButtonGroup buttonGroup6;
+    private javax.swing.JTextArea code_editor;
     private javax.swing.JButton compile;
     private javax.swing.JComboBox<String> font_size;
     private javax.swing.JComboBox<String> font_style;
-    private javax.swing.JPanel input_tab;
+    private javax.swing.JTextArea input_text_tab;
     private javax.swing.JButton jButton1;
     private javax.swing.JColorChooser jColorChooser1;
     private javax.swing.JComboBox<String> jComboBox2;
@@ -315,14 +388,27 @@ public class Screen extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextPane jTextPane1;
-    private javax.swing.JTabbedPane output_tab;
+    private javax.swing.JTextArea output_text_tab;
     private javax.swing.JButton run;
     private javax.swing.JComboBox<String> select_language;
     private javax.swing.JButton send;
-    private javax.swing.JTabbedPane tabs;
+    private javax.swing.JButton start_editing;
+    private javax.swing.JTabbedPane tabbed_pane;
     // End of variables declaration//GEN-END:variables
+
+    private class Mthread extends Thread{
+    @Override
+    public void run(){
+        try {
+            func();
+        } catch (IOException ex) {
+            Logger.getLogger(Screen.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    }
 }
