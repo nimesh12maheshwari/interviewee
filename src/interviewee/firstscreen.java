@@ -138,7 +138,8 @@ public class firstscreen extends javax.swing.JFrame {
         // TODO add your handling code here:
        try{      
         Socket s=new Socket("172.29.45.224",6666);  
-        DataOutputStream dout=new DataOutputStream(s.getOutputStream());  
+        DataOutputStream dout=new DataOutputStream(s.getOutputStream());
+          System.out.println("Sending interviewee data");
         dout.writeUTF(College.getText());  
         dout.flush();  
         dout.writeUTF(Regno.getText());  
@@ -147,7 +148,7 @@ public class firstscreen extends javax.swing.JFrame {
         dout.flush();  
         dout.writeUTF(Branch.getText());  
         dout.flush();       
-        
+        System.out.println("Data send successfully");
         DataInputStream din=new DataInputStream(s.getInputStream());
         String str=din.readUTF();
         System.out.println(str);
