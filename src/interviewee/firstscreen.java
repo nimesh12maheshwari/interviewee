@@ -23,6 +23,7 @@ public class firstscreen extends javax.swing.JFrame {
      * Creates new form firstscreen
      */
     public firstscreen() {
+        System.out.println("constructor");
         initComponents();
     }
 
